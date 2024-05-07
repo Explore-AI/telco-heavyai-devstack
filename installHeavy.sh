@@ -353,21 +353,20 @@ c.JupyterHub.authenticator_class = "dummyauthenticator.DummyAuthenticator"
 
 jupyterEnd
 
-
+}
 
 installFiles(){
 
   
-  sudo mkdir /var/lib/heavyai
-  sudo mkdir /data/heavyai/storage
-  sudo mkdir /var/lib/heavyai/odbc
+  sudo mkdir -p /var/lib/heavyai
+  sudo mkdir -p /data/heavyai/storage
+  sudo mkdir -p /var/lib/heavyai/odbc
   sudo /home/$USER/heavyai-devstack/configHeavyConnect.sh
   sudo chown $USER /var/lib/heavyai
   sudo chown $USER /data/heavyai/storage
-  sudo mkdir /var/lib/heavyai/import
-  sudo mkdir /var/lib/heavyai/jupyter
-  sudo mkdir /data/$USER/jupyterData
-  sudo mkdir /data/$USER/jupyterData/work
+  sudo mkdir -p /var/lib/heavyai/import
+  sudo mkdir -p /var/lib/heavyai/jupyter
+  sudo mkdir -p /data/$USER/jupyterData/work
   sudo chmod -R 777 /data/$USER/jupyterData
   sudo chmod -R 777 /data/$USER/jupyterData/work
   sudo chmod ugo+rwx -R /data/$USER/jupyterData
@@ -377,14 +376,8 @@ installFiles(){
   sudo systemctl stop docker
   sudo systemctl start docker
 
-
-
   cp ./$HEAVY_CONFIG_FILE_NAME /var/lib/heavyai/.
   cp ./$SERVERS_JSON_FILE /var/lib/heavyai/.
-
-
-}
-
 }
 
 

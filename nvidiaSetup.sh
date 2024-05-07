@@ -8,6 +8,10 @@ clean_docker() {
   sudo apt-get remove docker docker-engine docker.io containerd runc
 }
 
+install_deps() {
+  sudo apt-get jq
+}
+
 install_docker(){
   sudo apt-get update
   sudo apt-get install ca-certificates curl
@@ -66,8 +70,9 @@ nvidia_driver_check(){
 sudo docker run --gpus=all --rm nvidia/cuda:11.8.0-runtime-ubuntu20.04 nvidia-smi
 }
 
-#clean_docker #Very seldom is this step required, but it is included in the standard Heavy.AI documentation
-#install_docker #Most environments already have docker installed and a more straightforward Docker install tends to work.  This step is also outlined in Heavy.AI documentation, but is most often not needed
+clean_docker #Very seldom is this step required, but it is included in the standard Heavy.AI documentation
+install_docker #Most environments already have docker installed and a more straightforward Docker install tends to work.  This step is also outlined in Heavy.AI documentation, but is most often not needed
+install_deps
 simple_docker_config
 install_nvidia_drivers
 nvidia_docker_runtime
