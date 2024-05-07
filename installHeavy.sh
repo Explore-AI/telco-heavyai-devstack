@@ -49,6 +49,7 @@ services:
     ipc: shareable
     volumes:
       - /var/lib/heavyai:/var/lib/heavyai
+      - /data/heavyai/storage:/var/lib/heavyai/storage
       - "/var/lib/heavyai/odbc/odbc.ini:/etc/odbc.ini:ro"
       - "/var/lib/heavyai/odbc/odbcinst.ini:/etc/odbcinst.ini:ro"
       - ./install_odbc_drivers.sh:/tmp/install_odbc_drivers.sh
@@ -320,7 +321,7 @@ c.DockerSpawner.notebook_dir = notebook_dir
 
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
-c.DockerSpawner.volumes = {"/home/ubuntu/jupyterData": "/home/jovyan/work",
+c.DockerSpawner.volumes = {"/data/ubuntu/jupyterData": "/home/jovyan/work",
                         "/var/lib/heavyai" : "/var/lib/heavyai"}
 
 # Remove containers once they are stopped
@@ -358,17 +359,20 @@ installFiles(){
 
   
   sudo mkdir /var/lib/heavyai
+  sudo mkdir /data/heavyai/storage
   sudo mkdir /var/lib/heavyai/odbc
   sudo /home/$USER/heavyai-devstack/configHeavyConnect.sh
   sudo chown $USER /var/lib/heavyai
+  sudo chown $USER /data/heavyai/storage
   sudo mkdir /var/lib/heavyai/import
   sudo mkdir /var/lib/heavyai/jupyter
-  sudo mkdir /home/$USER/jupyterData
-  sudo mkdir /home/$USER/jupyterData/work
-  sudo chmod -R 777 /home/$USER/jupyterData
-  sudo chmod -R 777 /home/$USER/jupyterData/work
-  sudo chmod ugo+rwx -R /home/$USER/jupyterData
+  sudo mkdir /data/$USER/jupyterData
+  sudo mkdir /data/$USER/jupyterData/work
+  sudo chmod -R 777 /data/$USER/jupyterData
+  sudo chmod -R 777 /data/$USER/jupyterData/work
+  sudo chmod ugo+rwx -R /data/$USER/jupyterData
   sudo chown -R $USER /var/lib/heavyai
+  sudo chown -R $USER /data/heavyai/storage
   sudo cp ./daemon.json /etc/docker/.
   sudo systemctl stop docker
   sudo systemctl start docker
