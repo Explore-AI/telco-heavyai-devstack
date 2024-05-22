@@ -9,7 +9,8 @@ SERVERS_JSON_FILE="servers.json"
 NGINX_CONF_FILE="nginx.conf"
 JUPYTERHUB_CONF_FILE="jupyterhub_config.py"
 DOCKERFILE_FILE="Dockerfile.jupyterhub"
-EXTERNAL_PORT="8001"
+EXTERNAL_PORT="80"
+EXTERNAL_PORT_HTTPS="443"
 OPENAPI_KEY=""
 LANGSMITH_KEY="ls__d90b2d77ae3447c3901b5735d7ed64bb"
 LANGSMITH_PROJECT="heavyiq-demo"
@@ -33,6 +34,7 @@ services:
 
     ports:
       - $EXTERNAL_PORT:80
+      - $EXTERNAL_PORT_HTTPS:443
 
     networks:
       - jupyterhub-network
