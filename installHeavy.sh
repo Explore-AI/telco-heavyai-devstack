@@ -375,7 +375,7 @@ installFiles(){
   sudo mkdir -p /var/lib/heavyai
   sudo mkdir -p /data/heavyai/storage
   sudo mkdir -p /var/lib/heavyai/odbc
-  sudo /home/$USER/heavyai-devstack/configHeavyConnect.sh
+  sudo /home/$USER/telco-heavyai-devstack/configHeavyConnect.sh
   sudo chown $USER /var/lib/heavyai
   sudo chown $USER /data/heavyai/storage
   sudo mkdir -p /var/lib/heavyai/import
