@@ -39,6 +39,7 @@ services:
 
     volumes:
       - $CONFIG_TMP/nginx.conf:/etc/nginx/nginx.conf
+      - $CONFIG_TMP/ssl:/etc/nginx/ssl
       - /var/lib/heavyai/jupyter/nginx/log:/var/log/nginx/
         
 
@@ -49,7 +50,7 @@ services:
     ipc: shareable
     volumes:
       - /var/lib/heavyai:/var/lib/heavyai
-      - /data/heavyai/storage:/var/lib/heavyai/storage
+      - /data/heavyai:/data
       - "/var/lib/heavyai/odbc/odbc.ini:/etc/odbc.ini:ro"
       - "/var/lib/heavyai/odbc/odbcinst.ini:/etc/odbcinst.ini:ro"
       - ./install_odbc_drivers.sh:/tmp/install_odbc_drivers.sh
@@ -60,6 +61,7 @@ services:
       - "6274:6274"
       - "6276:6276"
       - "6278:6278"
+    command: /bin/sh -c "/opt/heavyai/startheavy --non-interactive --data /data/storage --config /var/lib/heavyai/heavy.conf"
 
   hub:
     build:
@@ -109,7 +111,7 @@ cd $CONFIG_TMP
 cat > $HEAVY_CONFIG_FILE_NAME <<conFileEnd
 http-port = 6278
 calcite-port = 6279
-data = "/var/lib/heavyai/storage"
+data = "/data"
 null-div-by-zero = true
 enable-watchdog = false
 allowed-import-paths = ["/var/lib/heavyai/import"]
@@ -230,10 +232,14 @@ http {
     access_log /var/log/nginx/access.log;
     error_log /var/log/nginx/error.log;
 
-    listen 80;
-    listen [::]:80;
+    listen 443 ssl;
+    listen [::]:443 ssl;
 
     server_name _;
+
+    ssl_certificate /etc/nginx/ssl/fullchain.pem;
+    ssl_certificate_key /etc/nginx/ssl/privkey.pem;
+    ssl_verify_client off;
 
     proxy_http_version 1.1;
     proxy_set_header Upgrade \$http_upgrade;
@@ -262,6 +268,14 @@ http {
     location ~* /(user/[^/]*)/(api/kernels/[^/]+/(channels|iopub|shell|stdin)|terminals/websocket)/? {
       proxy_pass            http://upstream_jupyter;
     }
+  }
+
+  server {
+      listen 80;
+      listen [::]:80;
+      server_name _;
+
+      return 301 https://$host$request_uri;
   }
 }
 nginxEnd
@@ -321,7 +335,7 @@ c.DockerSpawner.notebook_dir = notebook_dir
 
 # Mount the real user's Docker volume on the host to the notebook user's
 # notebook directory in the container
-c.DockerSpawner.volumes = {"/data/ubuntu/jupyterData": "/home/jovyan/work",
+c.DockerSpawner.volumes = {"/data/jupyter-data": "/home/jovyan/work",
                         "/var/lib/heavyai" : "/var/lib/heavyai"}
 
 # Remove containers once they are stopped
