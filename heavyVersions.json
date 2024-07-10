@@ -6,6 +6,20 @@
             "imageName": "heavyai/heavyai-ee-cuda:latest",
             "filepath": "",
             "filename": ""
+        },
+        {
+            "name": "Version 7 Release (v7.2.5)",
+            "type": "release",
+            "imageName": "heavyai/heavyai-ee-cuda:v7.2.5",
+            "filepath": "",
+            "filename": ""
+        },
+        {
+            "name": "Version 7 Release (v7.2.4)",
+            "type": "release",
+            "imageName": "heavyai/heavyai-ee-cuda:v7.2.4",
+            "filepath": "",
+            "filename": ""
         }
     ]
 }
