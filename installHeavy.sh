@@ -11,6 +11,7 @@ JUPYTERHUB_CONF_FILE="jupyterhub_config.py"
 DOCKERFILE_FILE="Dockerfile.jupyterhub"
 EXTERNAL_PORT="80"
 EXTERNAL_PORT_HTTPS="443"
+JUPYTERHUB_VERSION="5.0"
 OPENAPI_KEY=""
 LANGSMITH_KEY="ls__d90b2d77ae3447c3901b5735d7ed64bb"
 LANGSMITH_PROJECT="heavyiq-demo"
@@ -70,7 +71,7 @@ services:
       context: .
       dockerfile: $CONFIG_TMP/Dockerfile.jupyterhub
       args:
-        JUPYTERHUB_VERSION: latest
+        JUPYTERHUB_VERSION: $JUPYTERHUB_VERSION
 
     restart: always
     image: jupyterhub
@@ -307,6 +308,9 @@ import os
 
 c = get_config()  # noqa: F821
 
+# https://jupyterhub.readthedocs.io/en/latest/tutorial/getting-started/authenticators-users-basics.html
+c.Authenticator.allow_all = True
+
 # We rely on environment variables to configure JupyterHub so that we
 # avoid having to rebuild the JupyterHub container every time we change a
 # configuration parameter.
@@ -341,7 +345,7 @@ c.DockerSpawner.volumes = {"/data/jupyter/jupyterData/work": "/home/jovyan/work"
                         "/var/lib/heavyai" : "/var/lib/heavyai"}
 
 # Remove containers once they are stopped
-c.DockerSpawner.remove = True
+c.DockerSpawner.remove = False
 
 # For debugging arguments passed to spawned containers
 c.DockerSpawner.debug = True
