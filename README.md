@@ -19,6 +19,18 @@ A simple development stack for HeavyAI using docker compose.  It includes two ke
 3. Run the ```installHeavy.sh``` script.  This will create the necessary config files and docker-compose files to stand up the test environment.  For basic usage, you do not need the ```heavyVersions.json``` file at all.  This is only used to load a custom Heavy.AI package.
 4. Launch the environment using the command:
 `docker-compose up -d`
+
+
+> When you have a custom data directory configured and get this error
+> ```
+> Server Error: HeavyDB data directory does not exist at '/data/storage'
+> ```
+> HeavyDB failed to initialise the directory, run the following command from within the `heavyai-devstack` directory to initialise it
+> ```
+> docker exec -it heavyaiserver /bin/sh -c "/opt/heavy/bin/initheavy -f --data /data/storage"
+> ``` 
+> There after you can launch the environment
+
 >Optional: Install and configure HeavyConnect for Snowflake, PostgreSQL, and Redshift.
 > 
 > Run the following command from within the `heavyai-devstack` directory to install the drivers into the container:
